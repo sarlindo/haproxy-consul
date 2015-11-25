@@ -2,6 +2,7 @@ FROM alpine:3.2
 
 MAINTAINER Arlindo Santos <sarlindo@hotmail.com>
 
+
 ENV CONSUL_TEMPLATE_VERSION=0.11.1
 
 RUN apk add --update bash 
