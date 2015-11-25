@@ -1,17 +1,19 @@
-FROM gliderlabs/alpine
+FROM alpine:3.2
 
-MAINTAINER Steven Borrelli <steve@aster.is>
+MAINTAINER Arlindo Santos <sarlindo@hotmail.com>
 
-ENV CONSUL_TEMPLATE_VERSION=0.8.0
+ENV CONSUL_TEMPLATE_VERSION=0.11.1
 
-RUN apk-install bash haproxy ca-certificates
+RUN apk add --update bash 
+RUN apk add --update haproxy=1.5.14-r0 
+RUN apk add --update ca-certificates
 
-ADD https://github.com/hashicorp/consul-template/releases/download/v${CONSUL_TEMPLATE_VERSION}/consul-template_${CONSUL_TEMPLATE_VERSION}_linux_amd64.tar.gz /
+ADD https://releases.hashicorp.com/consul-template/${CONSUL_TEMPLATE_VERSION}/consul-template_${CONSUL_TEMPLATE_VERSION}_linux_amd64.zip /
 
-RUN tar zxvf consul-template_${CONSUL_TEMPLATE_VERSION}_linux_amd64.tar.gz && \
-    mv consul-template_${CONSUL_TEMPLATE_VERSION}_linux_amd64/consul-template /usr/local/bin/consul-template && \
-    rm -rf /consul-template_${CONSUL_TEMPLATE_VERSION}_linux_amd64.tar.gz && \
-    rm -rf /consul-template_${CONSUL_TEMPLATE_VERSION}_linux_amd64
+RUN unzip consul-template_${CONSUL_TEMPLATE_VERSION}_linux_amd64.zip && \ 
+    mv consul-template /usr/local/bin/consul-template && \ 
+    rm -rf /consul-template_${CONSUL_TEMPLATE_VERSION}_linux_amd64.zip && \ 
+    rm -rf consul-template
 
 RUN mkdir -p /haproxy /consul-template/config.d /consul-template/template.d
 

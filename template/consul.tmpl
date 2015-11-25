@@ -19,6 +19,20 @@ frontend www
 
 {{ range services }}
 backend {{ .Name }}_backend
-{{ range service .Name }}
-   server {{ .Node }} {{ .Address }}:{{ .Port }}{{ end }}
+{{ if eq .Name "mesos" }}
+   mode http
+   balance roundrobin
+   option httpclose
+   option forwardfor
+   option httpchk /master/state.json
+   http-check expect string elected_time
+   timeout check 10s
+   {{ range service .Name }}
+   server {{ .Node }} {{ .Address }}:{{ .Port }} check inter 10s fall 1 rise 3
+   {{ end }}
+{{ else }}
+    {{ range service .Name }}
+    server {{ .Node }} {{ .Address }}:{{ .Port }}
+    {{ end }}
+{{ end }}
 {{ end }}
